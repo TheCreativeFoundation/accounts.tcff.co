@@ -1,0 +1,26 @@
+{
+  "name": "api.accounts.tcff.co",
+  "version": "1.0.0",
+  "description": "The API for the TCF Accounts Application to securely authenticate and verify users",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/thecreativefoundation/api.accounts.tcff.co.git"
+  },
+  "keywords": [
+    "auth",
+    "firebase",
+    "users",
+    "thecreativefoundation",
+    "accounts"
+  ],
+  "author": "The Creative Foundation",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://gitlab.com/thecreativefoundation/api.accounts.tcff.co/issues"
+  },
+  "homepage": "https://gitlab.com/thecreativefoundation/api.accounts.tcff.co#README"
+}
