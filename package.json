@@ -22,8 +22,12 @@
   "bugs": {
     "url": "https://gitlab.com/thecreativefoundation/api.accounts.tcff.co/issues"
   },
-  "homepage": "https://gitlab.com/thecreativefoundation/api.accounts.tcff.co#README",
+  "homepage": "https://accounts.tcff.co",
   "dependencies": {
-    "express": "^4.16.3"
+    "@sendgrid/mail": "^6.3.1",
+    "express": "^4.16.3",
+    "firebase-admin": "^6.0.0",
+    "sendgrid": "^5.2.3",
+    "serverless-http": "^1.6.0"
   }
 }
