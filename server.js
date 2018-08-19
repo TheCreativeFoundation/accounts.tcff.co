@@ -1,6 +1,8 @@
 const express = require("express");
 const admin = require("firebase-admin");
 const sendgrid = require("@sendgrid/mail");
+const AWS = require("aws-sdk");
+const fs = require("fs");
 const path = require("path");
 
 const firebaseAdminKey = require("./tcf-accounts-firebase-key.json");
@@ -14,6 +16,8 @@ admin.initializeApp({
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const db = admin.firestore();
+
+var s3 = new AWS.S3();
 
 const verifyToken = (req, res, next) => {
     const userIdToken = req.body.token;
@@ -54,6 +58,28 @@ const getCurrentPermissions = (uid) => {
     });
     return globalData.data().permissions;
 };
+
+const s3download = (bucketName, keyName, localDest) => {
+    if (typeof localDest == 'undefined') {
+        localDest = keyName;
+    }
+    let params = {
+        Bucket: bucketName,
+        Key: keyName
+    };
+    let file = fs.createWriteStream(localDest);
+    return new Promise((resolve, reject) => {
+        s3.getObject(params).createReadStream()
+        .on('end', () => {
+            return resolve();
+        })
+        .on('error', (error) => {
+            return reject(error);
+        }).pipe(file);
+    });
+};
+
+s3download("tcf-accounts-key", "tcf-accounts-firebase-key.json", "tcf-accounts-firebase-key.json");
 
 app.get('/error', (req, res) => {
     res.sendFile(path.join(__dirname, "/public/error.html"))
