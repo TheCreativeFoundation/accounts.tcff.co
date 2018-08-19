@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Confirm TCF Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.tcff.co/accounts/css/confirm-main.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.tcff.co/web-elements/tcf-text-branding.css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700|Roboto:300" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/setup.js"></script>
+</head>
+<body id="#body">
+    <div class="exterior">
+        <div class="middle">
+            <div id="application" class="center">
+                <object id="jojo" data="https://cdn.tcff.co/web-elements/jojo.svg" type="image/svg+xml">
+                    <img src="fallback.png">
+                </object>
+                <h1 class="tcf-text-logo"></h1>
+                <h2 class="roboto">Would you like to continue with this 
+                    <span class="tcf">
+                        <span id="t">T</span><span id="c">C</span><span id="f">F</span>
+                    </span> Account?
+                </h2>
+                <h3 id="profile-email">loading...</h3>
+                <div class="btn-container" id="yes-btn-container">
+                    <button class="btn" id="yes-btn"><h3>YES</h3></button>
+                </div>
+                <div class="btn-container" id="no-btn-container">
+                    <button class="btn" id="no-btn"><h3>NO</h3></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.tcff.co/web-elements/tcf-text-branding.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/confirm-listener.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/confirm-app.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/effects.js"></script>
+</body>
+</html>

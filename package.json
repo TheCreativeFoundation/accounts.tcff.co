@@ -1,14 +1,14 @@
 {
-  "name": "api.accounts.tcff.co",
+  "name": "accounts.tcff.co",
   "version": "1.0.0",
-  "description": "The API for the TCF Accounts Application to securely authenticate and verify users",
+  "description": "The TCF Accounts Application used to securely authenticate and verify users",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/thecreativefoundation/api.accounts.tcff.co.git"
+    "url": "git+https://gitlab.com/thecreativefoundation/accounts.tcff.co.git"
   },
   "keywords": [
     "auth",
@@ -20,9 +20,9 @@
   "author": "The Creative Foundation",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://gitlab.com/thecreativefoundation/api.accounts.tcff.co/issues"
+    "url": "https://gitlab.com/thecreativefoundation/accounts.tcff.co/issues"
   },
-  "homepage": "https://accounts.tcff.co",
+  "homepage": "https://accounts.tcff.co/about",
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
     "express": "^4.16.3",

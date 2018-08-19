@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Signin to TCF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.tcff.co/accounts/css/signin-main.css" />
+    <link rel="stylesheet" href="https://cdn.tcff.co/web-elements/tcf-text-branding.css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700|Roboto:300" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/setup.js"></script>
+</head>
+
+<body id="body">
+    <div class="exterior">
+    <div class="middle">
+    <div class="center" id="application">
+        <object id="jojo" data="https://cdn.tcff.co/web-elements/jojo.svg" type="image/svg+xml">
+            <img src="fallback.png">
+        </object>
+        <h1 class="tcf-text-logo"></h1>
+        <h2 class="roboto">Sign in to your
+            <span class="tcf">
+                <span id="t">T</span><span id="c">C</span><span id="f">F</span>
+            </span> Account
+        </h2>
+        <div id="application-form">
+            <p class="left-align label" id="email-label">Email</p>
+            <input type="email" id="email-input" label="email-input" name="email-input" required>
+            <p class="left-align label" id="pass-label">Password</p>
+            <input type="password" id="pass-input" label="pass-input" name="pass-input" required>                
+        </div>
+        <div>
+            <button id="signin-button" type="submit">
+                <h3>SIGN IN</h3>
+            </button>
+        </div>
+        <div id="links">
+            <h4 id="forgotPasswordLink">
+                <a>Forgot your password?</a>
+            </h4>
+            <h4 id="createAccountLink">
+                <a>Create account</a>
+            </h4>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="https://cdn.tcff.co/accounts/js/signin-app.js"></script>
+    <script src="https://cdn.tcff.co/web-elements/tcf-text-branding.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/effects.js"></script>
+</body>
+
+</html>

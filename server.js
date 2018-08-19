@@ -1,7 +1,7 @@
-const serverless = require("serverless-http");
 const express = require("express");
 const admin = require("firebase-admin");
 const sendgrid = require("@sendgrid/mail");
+const path = require("path");
 
 const firebaseAdminKey = require("./tcf-accounts-firebase-key.json");
 const app = express();
@@ -32,6 +32,13 @@ const verifyToken = (req, res, next) => {
     });
 };
 
+const checkForCallback = (req, res, next) => {
+    if (req.query.callback_uri) {
+        next();
+    }
+    res.redirect("/");
+}
+
 const getCurrentPermissions = (uid) => {
     const globalDataRef = db.collection(uid).doc("global");
     const globalData = globalDataRef.get().then((doc) => {
@@ -48,22 +55,50 @@ const getCurrentPermissions = (uid) => {
     return globalData.data().permissions;
 };
 
-app.get('/', function (req, res) {
-    res.send('Hello World!');
+app.get('/error', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/error.html"))
 });
 
-app.get('/hello', function (req, res) {
-    res.send('Hello There, World!');
+app.get('/myaccount/mngt', (req, res) => {
+    if (!(req.query.oobCode || req.query.continue_url || req.query.mode)) {
+        const mode = req.query.mode;
+        if (mode === "resetPassword") {
+            res.sendFile(path.join(__dirname, "/public/resetpassword.html"));
+        } else if (mode === "verifyEmail") {
+            res.sendFile(path.join(__dirname, "/public/verifyemail.html"));
+        } else {
+            res.redirect("/error");
+        }
+    }
+    res.redirect("/");
+});
+
+app.use(checkForCallback);
+
+app.get('/signin', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/signin.html"));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/signup.html"));
+});
+
+app.get('/signin/confirm', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/confirm.html"));
+});
+
+app.get('/signin/forgotpassword', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/forgotpassword.html"));
 });
 
 app.use(verifyToken);
 
-app.post("/verifytoken", (req, res) => {
+app.post("/api/verifytoken", (req, res) => {
     const uid = req.tcfAccountUid;
     res.json({"statusCode":202, "message":"token was successfully verified", "uid":uid});
 });
 
-app.post("/createtoken", (req, res) => {
+app.post("/api/createtoken", (req, res) => {
     const uid = req.tcfAccountUid;
     const currentPermissions = getCurrentPermissions(uid);
     if (currentPermissions === undefined) {
@@ -78,7 +113,7 @@ app.post("/createtoken", (req, res) => {
     });
 });
 
-app.post("/setclaims", (req, res) => {
+app.post("/api/setclaims", (req, res) => {
     const uid = req.tcfAccountUid;
     const currentPermissions = getCurrentPermissions(uid);
     if (currentPermissions === undefined) {
@@ -93,7 +128,7 @@ app.post("/setclaims", (req, res) => {
     });
 });
 
-app.post("/email/:subject", (req, res) => {
+app.post("/api/email/:subject", (req, res) => {
     const subject = req.params.subject;
     const userEmail = req.tcfAccountEmail;
     const msg = {
@@ -121,8 +156,7 @@ app.post("/email/:subject", (req, res) => {
     res.json({"statusCode":202, "message":"operation passed"});
 });
 
-// app.listen(80, () => {
-//     console.log("Listening on port 80...");
-// });
+app.listen(80, () => {
+    console.log("Listening on port 80...");
+});
 
-module.exports.handler = serverless(app);

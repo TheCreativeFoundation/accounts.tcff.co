@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sign Up for TCF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.tcff.co/accounts/css/signup-main.css" />
+    <link rel="stylesheet" href="https://cdn.tcff.co/web-elements/tcf-text-branding.css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700|Roboto:300" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/setup.js"></script>
+</head>
+
+<body id="body">
+    <div class="exterior">
+        <div class="middle">
+            <div class="center" id="application">
+                <h1 class="tcf-text-logo"></h1>
+                <h2 class="roboto" id="initial-header">Create your 
+                    <span class="tcf">
+                        <span id="t">T</span><span id="c">C</span><span id="f">F</span>
+                    </span>
+                    Account
+                </h2>
+                <h2 class="roboto hidden" id="secondary-header">
+                    An email has been sent with a link to verify and create your 
+                    <span class="tcf">
+                        <span id="t">T</span><span id="c">C</span><span id="f">F</span>
+                    </span>
+                    Account!
+                </h2>
+                <h2 class="roboto hidden" id="error-header">
+                    Something went wrong when creating your  
+                    <span class="tcf">
+                        <span id="t">T</span><span id="c">C</span><span id="f">F</span>
+                    </span>
+                    Account, please try again later.
+                </h2>
+                <div id="application-form">
+                    <div id="textInputs">
+                        <div class="name-form">
+                            <div id="first">
+                                <p class="label left-align" id="firstName-label">First name</p>
+                                <input type="text" id="firstName-input" name="firstName-input" label="firstName-input">                
+                            </div>
+                            <div id="last">
+                                <p class="label left-align" id="lastName-label">Last name</p>
+                                <input type="text" id="lastName-input" name="lastName-input" label="lastName-input">
+                            </div>
+                        </div>
+                        <div class="small-spacer"></div>
+                        <p class="left-align label" id="username-label">Pick a username</p>
+                        <input type="text" id="username-input" name="username-input" label="username-label">
+                        <p class="left-align label" id="email-label">Email</p>
+                        <input type="email" id="email-input" name="email-input" label="email-input">
+                        <p class="left-align label" id="pass-label">Create a password</p>
+                        <input type="password" id="pass-input" name="pass-input" label="pass-input">
+                        <p class="left-align label" id="passAgain-label">Confirm password</p>
+                        <input type="password" id="passAgain-input" name="passAgain-input" label="passAgain-input">
+                    </div>
+                    <div id="termsOfService" class="left-align">
+                        <input class="left-align" type="checkbox" id="termsOfService-input" name="termsOfService-input" label="termsOfService-input" value="termsOfService-agreed" checked>
+                        <label for="termsOfService-input" id="termsOfService-label">
+                            I Agree to the <a href="#">Terms and Service</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button id="signup-button" type="submit">
+                        <h3>SIGN UP</h3>
+                    </button> 
+                </div>
+                <h4 id="haveAccountLink">
+                    <a>Have an account?</a>
+                </h4>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.tcff.co/accounts/js/signup-app.js"></script>
+    <script src="https://cdn.tcff.co/web-elements/tcf-text-branding.js"></script>
+    <script src="https://cdn.tcff.co/accounts/js/effects.js"></script>
+</body>
+
+</html>
