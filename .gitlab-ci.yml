@@ -17,17 +17,17 @@ install_dependencies:
     paths:
       - node_modules/
   tags:
-    - tcf-accounts-node-app
+    - gitlab-org
 
 test_with_lab:
   stage: test
   script: npm test
   tags:
-    - tcf-accounts-node-app
+    - gitlab-org
 
 deploy_to_elb:
   stage: deploy
   script:
     - ./bin/deploy.sh
   tags:
-    - tcf-accounts-node-app
+    - gitlab-org
