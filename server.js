@@ -1,12 +1,20 @@
 const express = require("express");
+const Raven = require('raven');
+const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
 const sendgrid = require("@sendgrid/mail");
 const AWS = require("aws-sdk");
 const fs = require("fs");
 const path = require("path");
 
+Raven.config('https://34374039f74a49e7ba4168c5c57ab557@sentry.io/1265543').install();
+    
 const firebaseAdminKey = require("./tcf-accounts-firebase-key.json");
 const app = express();
+
+app.use(bodyParser.json());
+app.use(Raven.requestHandler());
+app.use(Raven.errorHandler());
 
 admin.initializeApp({
     credential: admin.credential.cert(firebaseAdminKey),
@@ -16,10 +24,14 @@ admin.initializeApp({
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 const db = admin.firestore();
+const settings = {timestampsInSnapshots: true};
+
+db.settings(settings);
 
 var s3 = new AWS.S3();
 
 const verifyToken = (req, res, next) => {
+    console.log("verifytoken middleware initiated");
     const userIdToken = req.body.token;
     if (userIdToken === undefined) {
         console.log("tokenVerifier failed: missing token");
@@ -34,29 +46,6 @@ const verifyToken = (req, res, next) => {
         console.log("tokenVerifier failed: "+error.message);
         res.json({"statusCode":406,"message":"ID token is invalid"});
     });
-};
-
-const checkForCallback = (req, res, next) => {
-    if (req.query.callback_uri) {
-        next();
-    }
-    res.redirect("/");
-}
-
-const getCurrentPermissions = (uid) => {
-    const globalDataRef = db.collection(uid).doc("global");
-    const globalData = globalDataRef.get().then((doc) => {
-        if (!doc.exists) {
-            console.log("/createtoken - globalData failed: document doesnt exist");
-            return undefined;
-        } else {
-            console.log("/createtoken - globalData succeded: "+doc.data());
-        }
-    }).catch((error) => {
-        console.log("/createtoken - globalData failed: "+error.message);
-        return undefined;
-    });
-    return globalData.data().permissions;
 };
 
 const s3download = (bucketName, keyName, localDest) => {
@@ -82,62 +71,71 @@ const s3download = (bucketName, keyName, localDest) => {
 s3download("tcf-accounts-key", "tcf-accounts-firebase-key.json", "tcf-accounts-firebase-key.json");
 
 app.get('/error', (req, res) => {
-    res.sendFile(path.join(__dirname, "/public/error.html"))
+    res.sendFile(path.join(__dirname, "/public/error.html"));
 });
 
 app.get('/myaccount/mngt', (req, res) => {
-    if (!(req.query.oobCode || req.query.continue_url || req.query.mode)) {
-        const mode = req.query.mode;
-        if (mode === "resetPassword") {
-            res.sendFile(path.join(__dirname, "/public/resetpassword.html"));
-        } else if (mode === "verifyEmail") {
-            res.sendFile(path.join(__dirname, "/public/verifyemail.html"));
-        } else {
-            res.redirect("/error");
-        }
+
+    if (req.query.oobCode === undefined || req.query.continue_url === undefined || req.query.mode === undefined) res.redirect("/error");    
+    if (req.query.mode === "resetPassword") {
+        res.sendFile(path.join(__dirname, "/public/resetpassword.html"));
+    } else if (req.query.mode === "verifyEmail") {
+        res.sendFile(path.join(__dirname, "/public/verifyemail.html"));
+    } else {
+        res.redirect(302, "/error");
     }
-    res.redirect("/");
 });
 
-app.use(checkForCallback);
-
 app.get('/signin', (req, res) => {
+    if (req.query.callback_uri === undefined) res.redirect(302, "/");
     res.sendFile(path.join(__dirname, "/public/signin.html"));
 });
 
 app.get('/signup', (req, res) => {
+    if (req.query.callback_uri === undefined) res.redirect(302, "/");
     res.sendFile(path.join(__dirname, "/public/signup.html"));
 });
 
 app.get('/signin/confirm', (req, res) => {
+    if (req.query.callback_uri === undefined) res.redirect(302, "/error");
     res.sendFile(path.join(__dirname, "/public/confirm.html"));
 });
 
-app.get('/signin/forgotpassword', (req, res) => {
+app.get('/forgotpassword', (req, res) => {
+    if (req.query.callback_uri === undefined) res.redirect(302, "/error");
     res.sendFile(path.join(__dirname, "/public/forgotpassword.html"));
 });
 
-app.use(verifyToken);
+app.use("/api/verifytoken", verifyToken);
 
 app.post("/api/verifytoken", (req, res) => {
     const uid = req.tcfAccountUid;
     res.json({"statusCode":202, "message":"token was successfully verified", "uid":uid});
 });
 
+app.use("/api/createtoken", verifyToken);
+
 app.post("/api/createtoken", (req, res) => {
-    const uid = req.tcfAccountUid;
-    const currentPermissions = getCurrentPermissions(uid);
-    if (currentPermissions === undefined) {
-        res.json({"statusCode":404, "message":"permissions from global data not found"});
-    }
-    admin.auth().createCustomToken(uid, currentPermissions).then((token) => {
-        console.log("createCustomToken succeded");
-        res.json({"statusCode":202, "message":"operation passed", "token":toString(token)});
+    db.collection(req.tcfAccountUid).doc("global").get().then((doc) => {
+        if (!doc.exists) {
+            res.json({"statusCode":404, "message":"global data document does not exist"});
+        } else {
+            console.log("global data document exists");
+            admin.auth().createCustomToken(req.tcfAccountUid, doc.data().permissions).then((token) => {
+                console.log("createCustomToken succeded");
+                res.json({"statusCode":202, "message":"operation passed", "token":token});
+            }).catch((error) => {
+                console.log(error.message);
+                res.json({"statusCode":505, "message":error.message});
+            });     
+        }
     }).catch((error) => {
-        console.log("/createtoken - createCustomToken failed: "+error.message);
+        console.log(error.message);
         res.json({"statusCode":505, "message":error.message});
     });
 });
+
+app.use("/api/setclaims", verifyToken);
 
 app.post("/api/setclaims", (req, res) => {
     const uid = req.tcfAccountUid;
@@ -153,6 +151,8 @@ app.post("/api/setclaims", (req, res) => {
         res.json({"statusCode":505, "message":error.message});
     });
 });
+
+app.use("/api/email/:subject", verifyToken);
 
 app.post("/api/email/:subject", (req, res) => {
     const subject = req.params.subject;

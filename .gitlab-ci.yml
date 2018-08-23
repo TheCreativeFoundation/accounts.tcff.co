@@ -1,0 +1,33 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+  tags:
+    - tcf-accounts-node-app
+
+test_with_lab:
+  stage: test
+  script: npm test
+  tags:
+    - tcf-accounts-node-app
+
+deploy_to_elb:
+  stage: deploy
+  script:
+    - ./bin/deploy.sh
+  tags:
+    - tcf-accounts-node-app
