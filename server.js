@@ -1,5 +1,4 @@
 const PORT = process.env.PORT || 80;
-
 const express = require("express");
 const Raven = require('raven');
 const bodyParser = require("body-parser");
@@ -9,31 +8,11 @@ const AWS = require("aws-sdk");
 const fs = require("fs");
 const path = require("path");
 
-const s3download = (bucketName, keyName, localDest) => {
-    if (typeof localDest == 'undefined') {
-        localDest = keyName;
-    }
-    let params = {
-        Bucket: bucketName,
-        Key: keyName
-    };
-    let file = fs.createWriteStream(localDest);
-    return new Promise((resolve, reject) => {
-        s3.getObject(params).createReadStream()
-        .on('end', () => {
-            return resolve();
-        })
-        .on('error', (error) => {
-            return reject(error);
-        }).pipe(file);
-    });
-};
-
-s3download("tcf-accounts-key", "tcf-accounts-firebase-key.json", "tcf-accounts-firebase-key.json");
+const firebaseAdminPrivateKey = process.env.FBA_PRIVATE_KEY;
+const firebaseAdminClientEmail = process.env.FBA_CLIENT_EMAIL;
 
 Raven.config('https://34374039f74a49e7ba4168c5c57ab557@sentry.io/1265543').install();
     
-const firebaseAdminKey = require("./tcf-accounts-firebase-key.json");
 const app = express();
 
 app.use(bodyParser.json());
@@ -41,7 +20,11 @@ app.use(Raven.requestHandler());
 app.use(Raven.errorHandler());
 
 admin.initializeApp({
-    credential: admin.credential.cert(firebaseAdminKey),
+    credential: admin.credential.cert({
+        projectId: "tcff-accounts",
+        clientEmail: firebaseAdminClientEmail,
+        privateKey: firebaseAdminPrivateKey
+    }),
     databaseURL: 'https://tcff-accounts.firebaseio.com'
 });
 
