@@ -3,8 +3,7 @@ const express = require("express");
 const Raven = require('raven');
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
-const sendgrid = require("@sendgrid/mail");
-const AWS = require("aws-sdk");
+const sendgrid = require("@sendgrid/mail");");
 const fs = require("fs");
 const path = require("path");
 
