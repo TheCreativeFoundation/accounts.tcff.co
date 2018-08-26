@@ -1,3 +1,5 @@
+const PORT = process.env.PORT || 80;
+
 const express = require("express");
 const Raven = require('raven');
 const bodyParser = require("body-parser");
@@ -182,7 +184,7 @@ app.post("/api/email/:subject", (req, res) => {
     res.json({"statusCode":202, "message":"operation passed"});
 });
 
-app.listen(80, () => {
-    console.log("Listening on port 80...");
+app.listen(PORT, () => {
+    console.log("Listening on port " + toString(PORT) + "...");
 });
 
