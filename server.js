@@ -22,7 +22,7 @@ admin.initializeApp({
     credential: admin.credential.cert({
         projectId: "tcff-accounts",
         clientEmail: firebaseAdminClientEmail,
-        privateKey: firebaseAdminPrivateKey
+        privateKey: '-----BEGIN PRIVATE KEY-----\n' + FBA_PRIVATE_KEY + '\n-----END PRIVATE KEY-----\n'
     }),
     databaseURL: 'https://tcff-accounts.firebaseio.com'
 });
