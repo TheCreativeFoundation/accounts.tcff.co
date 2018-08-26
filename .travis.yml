@@ -1,0 +1,26 @@
+language: node_js
+python: 
+  - "7"
+install:
+  - npm install
+script:
+  - npm test
+
+cache:
+  directories:
+    - "node_modules"
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  skip_cleanup: true
+  region: "us-east-2"
+  app: $EB_APP_NAME
+  env: $EB_APP_ENV
+  bucket_name: $S3_BUCKET
+
+notifications:
+  slack: thecreativefoundation:n3PZ4D7QrW3uXjH7QdBH5exQ
+  on_failure: always
+  on_success: always
