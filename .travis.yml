@@ -14,9 +14,9 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   skip_cleanup: true
   region: "us-east-2"
-  app: $EB_APP_NAME
-  env: $EB_APP_ENV
-  bucket_name: $S3_BUCKET
+  app: "accounts.tcff.co"
+  env: "tcf-accounts-main"
+  bucket_name: tcf-accounts-main-bucket
 
 notifications:
   slack: thecreativefoundation:n3PZ4D7QrW3uXjH7QdBH5exQ
