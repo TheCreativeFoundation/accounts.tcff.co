@@ -28,6 +28,6 @@ test_with_lab:
 deploy_to_elb:
   stage: deploy
   script:
-    - ./bin/deploy
+    - sh ./bin/deploy
   tags:
     - gitlab-org
