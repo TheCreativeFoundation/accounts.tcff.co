@@ -4,6 +4,7 @@ const Raven = require('raven');
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
 const sendgrid = require("@sendgrid/mail");
+const path = require("path");
 
 Raven.config('https://34374039f74a49e7ba4168c5c57ab557@sentry.io/1265543').install();
     
