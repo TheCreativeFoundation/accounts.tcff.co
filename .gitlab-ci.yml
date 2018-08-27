@@ -1,0 +1,30 @@
+image: node:8.11.1
+
+stages:
+  - init
+  - tests
+  - deploy
+
+init:
+  stage: init
+  script:
+    - npm cache clean
+    - rm -rf node-modules
+    - npm install
+run_tests:
+  stage: tests
+  script:
+    - npm test
+
+deploy_production:
+  stage: deploy
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/text-giving.git
+    - git push heroku master
+    - echo "Deployed to production server"
+  environment:
+  name: production
+  url: https://tcf-accounts-main.herokuapp.com/
+  when: manual
+  only:
+    - master
