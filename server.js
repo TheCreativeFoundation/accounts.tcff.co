@@ -4,10 +4,6 @@ const Raven = require('raven');
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
 const sendgrid = require("@sendgrid/mail");
-const fs = require("fs");
-const path = require("path");
-
-const firebaseAdminCreds = process.env.FBA_CREDENTIALS;
 
 Raven.config('https://34374039f74a49e7ba4168c5c57ab557@sentry.io/1265543').install();
     
@@ -18,7 +14,7 @@ app.use(Raven.requestHandler());
 app.use(Raven.errorHandler());
 
 admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(firebaseAdminCreds)),
+    credential: admin.credential.cert(JSON.parse(process.env.FBA_CREDENTIALS)),
     databaseURL: 'https://tcff-accounts.firebaseio.com'
 });
 
@@ -28,8 +24,6 @@ const db = admin.firestore();
 const settings = {timestampsInSnapshots: true};
 
 db.settings(settings);
-
-var s3 = new AWS.S3();
 
 const verifyToken = (req, res, next) => {
     console.log("verifytoken middleware initiated");

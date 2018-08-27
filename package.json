@@ -29,7 +29,6 @@
     "express": "^4.16.3",
     "firebase-admin": "^6.0.0",
     "raven": "^2.6.3",
-    "sendgrid": "^5.2.3",
-    "serverless-http": "^1.6.0"
+    "sendgrid": "^5.2.3"
   }
 }
