@@ -7,8 +7,7 @@ const sendgrid = require("@sendgrid/mail");
 const fs = require("fs");
 const path = require("path");
 
-const firebaseAdminPrivateKey = process.env.FBA_PRIVATE_KEY;
-const firebaseAdminClientEmail = process.env.FBA_CLIENT_EMAIL;
+const firebaseAdminCreds = process.env.FBA_CREDENTIALS;
 
 Raven.config('https://34374039f74a49e7ba4168c5c57ab557@sentry.io/1265543').install();
     
@@ -19,11 +18,7 @@ app.use(Raven.requestHandler());
 app.use(Raven.errorHandler());
 
 admin.initializeApp({
-    credential: admin.credential.cert({
-        projectId: "tcff-accounts",
-        clientEmail: firebaseAdminClientEmail,
-        privateKey: '-----BEGIN PRIVATE KEY-----\n' + firebaseAdminPrivateKey + '\n-----END PRIVATE KEY-----\n'
-    }),
+    credential: admin.credential.cert(JSON.parse(firebaseAdminCreds)),
     databaseURL: 'https://tcff-accounts.firebaseio.com'
 });
 
